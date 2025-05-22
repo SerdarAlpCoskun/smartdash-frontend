@@ -11,8 +11,10 @@ const corsOptions = {
   origin: ["http://localhost:5173", "https://smartdash-frontend.vercel.app"],
   credentials: true,
 };
+
 app.use(cors(corsOptions));
 
+// ✅ JSON desteği
 app.use(express.json());
 
 // ✅ Rotalar
