@@ -1,27 +1,30 @@
-require('dotenv').config();
-
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+require("dotenv").config();
 
 const app = express();
 mongoose.set("strictQuery", true);
 
-// ✅ Middleware'ler
-app.use(cors());
+// ✅ CORS AYARI
+const corsOptions = {
+  origin: ["http://localhost:5173", "https://smartdash-frontend.vercel.app"],
+  credentials: true,
+};
+app.use(cors(corsOptions));
+
 app.use(express.json());
 
-// ✅ Route dosyalarını dahil et
+// ✅ Rotalar
 const authRoutes = require("./routes/authRoutes");
 const kpiRoutes = require("./routes/kpiRoutes");
 const aiRoutes = require("./routes/aiRoutes");
 
-// ✅ Route'lara yol tanımları
 app.use("/api/auth", authRoutes);
 app.use("/api/kpis", kpiRoutes);
 app.use("/api/ai", aiRoutes);
 
-// ✅ MongoDB bağlantısı ve sunucuyu başlat
+// ✅ MongoDB Bağlantısı
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {

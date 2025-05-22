@@ -18,10 +18,13 @@ function Dashboard({ username, role }) {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  // 🔒 Hardcoded backend URL
+  const API_URL = "https://smartdash-backend.onrender.com";
+
   const fetchKpis = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/api/kpis", {
+      const res = await axios.get(`${API_URL}/api/kpis`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setKpis(res.data);
@@ -44,7 +47,7 @@ function Dashboard({ username, role }) {
     if (!window.confirm("Bu KPI silinsin mi?")) return;
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/api/kpis/${id}`, {
+      await axios.delete(`${API_URL}/api/kpis/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchKpis();
@@ -115,18 +118,13 @@ function Dashboard({ username, role }) {
 
   return (
     <div className="min-h-screen bg-gray-100 py-10 px-4 relative">
-      
-      {/* Sağ üst köşeye sabit KPI Asistanı */}
       <div className="hidden md:block absolute top-6 right-6 z-10">
         <KpiAssistant currentKpis={kpis.map(kpi => kpi.name)} />
       </div>
 
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-4xl font-bold text-blue-700">
-            SmartDash
-            KPI Yönetim Paneli 
-          </h1>
+          <h1 className="text-4xl font-bold text-blue-700">SmartDash KPI Yönetim Paneli</h1>
           <button
             onClick={handleLogout}
             className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
@@ -136,8 +134,7 @@ function Dashboard({ username, role }) {
         </div>
 
         {role === "admin" && (
-  <div className="bg-white p-6 rounded shadow-md mb-6">
-
+          <div className="bg-white p-6 rounded shadow-md mb-6">
             <h2 className="text-xl font-semibold mb-4">
               {kpiToEdit ? "KPI Güncelle" : "Yeni KPI Ekle"}
             </h2>
